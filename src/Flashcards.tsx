@@ -76,7 +76,7 @@ export default function FlashcardApp() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center justify-between text-white/60 text-sm">
-          <span>Карточка {currentIndex + 1} из {shuffledKeys.length}</span>
+          <span>Карточка - {currentIndex + 1} из {shuffledKeys.length}</span>
           <div className="flex gap-1">
             {shuffledKeys.map((_, idx) => (
               <div
