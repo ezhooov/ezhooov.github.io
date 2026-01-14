@@ -16,9 +16,11 @@ const vocabulary = {
   "Здравствуйте (ко многим людям)": "Сәлеметсіздер ме / Саламатсыздар ма",
   "Здравствуйте (между мужчинами)": "Ассалаумағалейкум",
   "Ответ на Здравствуйте (между мужчинами)": "Уағалейкумассалам"
-};
+} as const;
 
-function shuffleArray(array: string[]) {
+type Keys = keyof typeof vocabulary;
+
+function shuffleArray(array: Keys[]) {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -32,12 +34,12 @@ function maskWord(word: string) {
 }
 
 export default function FlashcardApp() {
-  const shuffledKeys = useMemo(() => shuffleArray(Object.keys(vocabulary)), []);
+  const shuffledKeys  = useMemo(() => shuffleArray(Object.keys(vocabulary) as Keys[]), []);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(null);
+  const [isCorrect, setIsCorrect] = useState<null | boolean>(null);
 
   const isFinished = currentIndex >= shuffledKeys.length;
   const currentWord = !isFinished ? shuffledKeys[currentIndex] : null;
@@ -102,7 +104,7 @@ export default function FlashcardApp() {
                   : 'text-pink-400'
                 : 'text-white/50'
             }`}>
-              {isRevealed ? currentAnswer : maskWord(currentAnswer)}
+              {isRevealed ? currentAnswer : currentAnswer && maskWord(currentAnswer)}
             </div>
           </div>
 
