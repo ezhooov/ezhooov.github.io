@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 const vocabulary = {
   "Человек": "Адам",
@@ -34,15 +34,14 @@ function maskWord(word: string | null) {
 }
 
 export default function FlashcardApp() {
-  const shuffledKeys  = useMemo(() => shuffleArray(Object.keys(vocabulary) as Keys[]), []);
+  const [shuffledKeys, setShuffledKeys]  = useState(() => shuffleArray(Object.keys(vocabulary) as Keys[]));
 
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [isRevealed, setIsRevealed] = useState(false);
   const [isCorrect, setIsCorrect] = useState<null | boolean>(null);
 
-  const isFinished = currentIndex >= shuffledKeys.length;
-  const currentWord = !isFinished ? shuffledKeys[currentIndex] : null;
+  const isFinished = shuffledKeys.length === 0;
+  const currentWord = !isFinished ? shuffledKeys[0] : null;
   const currentAnswer = currentWord ? vocabulary[currentWord] : null;
 
   const handleSubmit = (e: React.SyntheticEvent) => {
@@ -54,14 +53,14 @@ export default function FlashcardApp() {
   };
 
   const handleRight = () => {
-    setCurrentIndex(prev => prev + 1);
+    setShuffledKeys(([, ...keys]) => keys)
     setUserInput('');
     setIsRevealed(false);
     setIsCorrect(null);
   };
 
   const handleWrong = () => {
-    setCurrentIndex(prev => prev + 1);
+    setShuffledKeys(([wrong, ...keys]) => [...keys, wrong])
     setUserInput('');
     setIsRevealed(false);
     setIsCorrect(null);
@@ -73,7 +72,7 @@ export default function FlashcardApp() {
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-12 text-center shadow-2xl border border-white/20">
           <div className="text-6xl mb-6">🎉</div>
           <h1 className="text-4xl font-bold text-white mb-4">Всё!</h1>
-          <p className="text-white/70 text-lg">Вы прошли все {shuffledKeys.length} карточек</p>
+          <p className="text-white/70 text-lg">Вы прошли все {Object.keys(vocabulary).length} карточек</p>
         </div>
       </div>
     );
@@ -83,7 +82,17 @@ export default function FlashcardApp() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center justify-between text-white/60 text-sm">
-          <span>Пройдено слов - {currentIndex} из {shuffledKeys.length}</span>
+          <span>Пройдено слов - {Object.keys(vocabulary).length - shuffledKeys.length} из {Object.keys(vocabulary).length}</span>
+          <div className="flex gap-1">
+            {Object.keys(vocabulary).map((_, idx) => (
+              <div
+                key={idx}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  idx < Object.keys(vocabulary).length - shuffledKeys.length ? 'bg-green-400' : idx === Object.keys(vocabulary).length - shuffledKeys.length ? 'bg-white' : 'bg-white/20'
+                }`}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
@@ -94,14 +103,54 @@ export default function FlashcardApp() {
 
           <div className="text-center mb-8">
             <span className="text-xs uppercase tracking-wider text-white/40 mb-2 block">Перевод</span>
-            <div className={`text-2xl font-mono transition-all duration-300 ${
-              isRevealed
-                ? isCorrect
-                  ? 'text-green-400'
-                  : 'text-pink-400'
-                : 'text-white/50'
-            }`}>
-              {isRevealed ? currentAnswer : maskWord(currentAnswer)}
+            <div className="text-2xl font-mono transition-all duration-300">
+              {isRevealed ? (
+                isCorrect ? (
+                  // Полностью правильно - показываем только currentAnswer серым
+                  <span className="text-green-400">{currentAnswer}</span>
+                ) : (() => {
+                  if (!currentAnswer) {
+                    return null
+                  }
+
+                  // Проверяем, есть ли совпадение в начале
+                  let matchLength = 0;
+                  const minLength = Math.min(userInput.length, currentAnswer.length);
+                  for (let i = 0; i < minLength; i++) {
+                    if (userInput[i].toLowerCase() === currentAnswer[i].toLowerCase()) {
+                      matchLength++;
+                    } else {
+                      break;
+                    }
+                  }
+
+                  if (matchLength > 0) {
+                    return (
+                      <>
+                        <span className="text-green-400">{userInput.slice(0, matchLength)}</span>
+                        <span className="text-red-400">{userInput.slice(matchLength)}</span>
+                        <span className="text-white/50"> - </span>
+                        <span className="text-green-400">{currentAnswer.slice(0, matchLength)}</span>
+                        <span className="text-white/50">{currentAnswer.slice(matchLength)}</span>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <>
+                        {userInput.length > 0 && (
+                          <>
+                            <span className="text-red-400">{userInput}</span>
+                            <span className="text-white/50"> - </span>
+                          </>
+                        )}
+                        <span className="text-white/50">{currentAnswer}</span>
+                      </>
+                    );
+                  }
+                })()
+              ) : (
+                <span className="text-white/50">{maskWord(currentAnswer)}</span>
+              )}
             </div>
           </div>
 
@@ -126,19 +175,21 @@ export default function FlashcardApp() {
             ) : (
               <div className="space-y-3">
                 <div className="flex gap-4 w-full">
+                  {!isCorrect && (
+                    <button
+                      type="button"
+                      onClick={handleWrong}
+                      className="flex-1 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                    >
+                      Неверно
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={handleRight}
                     className="flex-1 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                   >
                     Верно
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleWrong}
-                    className="flex-1 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-                  >
-                    Неверно
                   </button>
                 </div>
               </div>
