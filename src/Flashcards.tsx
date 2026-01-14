@@ -12,8 +12,8 @@ const vocabulary = {
   "Город": "Қала",
   "Улица": "Көше",
   "Привет (фамильярное, между друзьями)": "Сәлем",
-  "Здравствуйте (к одному человеку)": "Сәлеметсіз бе / Саламатсыз ба",
-  "Здравствуйте (ко многим людям)": "Сәлеметсіздер ме / Саламатсыздар ма",
+  "Здравствуйте (к одному человеку)": "Сәлеметсіз бе",
+  "Здравствуйте (ко многим людям)": "Сәлеметсіздер ме",
   "Здравствуйте (между мужчинами)": "Ассалаумағалейкум",
   "Ответ на Здравствуйте (между мужчинами)": "Уағалейкумассалам"
 } as const;
@@ -29,8 +29,8 @@ function shuffleArray(array: Keys[]) {
   return shuffled;
 }
 
-function maskWord(word: string) {
-  return word.slice(10).split('').map(() => '•').join('');
+function maskWord(word: string | null) {
+  return word?.slice(0, 10).split('').map(() => '•').join('') ?? '';
 }
 
 export default function FlashcardApp() {
@@ -53,7 +53,14 @@ export default function FlashcardApp() {
     }
   };
 
-  const handleNext = () => {
+  const handleRight = () => {
+    setCurrentIndex(prev => prev + 1);
+    setUserInput('');
+    setIsRevealed(false);
+    setIsCorrect(null);
+  };
+
+  const handleWrong = () => {
     setCurrentIndex(prev => prev + 1);
     setUserInput('');
     setIsRevealed(false);
@@ -76,17 +83,7 @@ export default function FlashcardApp() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center justify-between text-white/60 text-sm">
-          <span>Карточка - {currentIndex + 1} из {shuffledKeys.length}</span>
-          <div className="flex gap-1">
-            {shuffledKeys.map((_, idx) => (
-              <div
-                key={idx}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  idx < currentIndex ? 'bg-green-400' : idx === currentIndex ? 'bg-white' : 'bg-white/20'
-                }`}
-              />
-            ))}
-          </div>
+          <span>Пройдено слов - {currentIndex} из {shuffledKeys.length}</span>
         </div>
 
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
@@ -104,7 +101,7 @@ export default function FlashcardApp() {
                   : 'text-pink-400'
                 : 'text-white/50'
             }`}>
-              {isRevealed ? currentAnswer : currentAnswer && maskWord(currentAnswer)}
+              {isRevealed ? currentAnswer : maskWord(currentAnswer)}
             </div>
           </div>
 
@@ -128,28 +125,26 @@ export default function FlashcardApp() {
               </button>
             ) : (
               <div className="space-y-3">
-                {isCorrect !== null && (
-                  <div className={`text-center py-2 rounded-lg ${
-                    isCorrect ? 'bg-green-500/20 text-green-400' : 'bg-pink-500/20 text-pink-400'
-                  }`}>
-                    {isCorrect ? '✓ Правильно!' : `✗ Ваш ответ: "${userInput}"`}
-                  </div>
-                )}
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="w-full py-3 bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-400 hover:to-orange-400 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-                >
-                  Следующая карточка →
-                </button>
+                <div className="flex gap-4 w-full">
+                  <button
+                    type="button"
+                    onClick={handleRight}
+                    className="flex-1 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                  >
+                    Верно
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleWrong}
+                    className="flex-1 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                  >
+                    Неверно
+                  </button>
+                </div>
               </div>
             )}
           </form>
         </div>
-
-        <p className="text-center text-white/30 text-xs mt-6">
-          Нажмите Enter для проверки ответа
-        </p>
       </div>
     </div>
   );
