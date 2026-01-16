@@ -15,7 +15,38 @@ const vocabulary = {
   "Здравствуйте (к одному человеку)": "Сәлеметсіз бе",
   "Здравствуйте (ко многим людям)": "Сәлеметсіздер ме",
   "Здравствуйте (между мужчинами)": "Ассалаумағалейкум",
-  "Ответ на Здравствуйте (между мужчинами)": "Уағалейкумассалам"
+  "Ответ на Здравствуйте (между мужчинами)": "Уағалейкумассалам",
+
+  "0": "Нөл",
+  "1": "Бір",
+  "2": "Екі",
+  "3": "Үш",
+  "4": "Төрт",
+  "5": "Бес",
+  "6": "Алты",
+  "7": "Жеті",
+  "8": "Сегіз",
+  "9": "Тоғыз",
+  "10": "Он",
+  "20": "Жиырма",
+  "30": "Отыз",
+  "40": "Қырық",
+  "50": "Елу",
+  "60": "Алпыс",
+  "70": "Жетпіс",
+  "80": "Сексен",
+  "90": "Тоқсан",
+  "100": "Жүз",
+  "1000": "Мың",
+
+  "Мало": "Аз",
+  "Много": "Көп",
+  "Сколько": "Қанша/Неше",
+
+  "Пока / Будь здоров (одному человеку, фамильярно)": "Сау бол",
+  "Пока / Будьте здоровы (ко многим людям, фамильярно)": "Сау болыңдар",
+  "До свидания / Будьте здоровы (к одному человеку, уважительно)": "Сау болыңыз",
+  "До свидания / Будьте здоровы (ко многим людям, уважительно)": "Сау болыңыздар"
 } as const;
 
 type Keys = keyof typeof vocabulary;
@@ -83,16 +114,16 @@ export default function FlashcardApp() {
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center justify-between text-white/60 text-sm">
           <span>Пройдено слов - {Object.keys(vocabulary).length - shuffledKeys.length} из {Object.keys(vocabulary).length}</span>
-          <div className="flex gap-1">
-            {Object.keys(vocabulary).map((_, idx) => (
-              <div
-                key={idx}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  idx < Object.keys(vocabulary).length - shuffledKeys.length ? 'bg-green-400' : idx === Object.keys(vocabulary).length - shuffledKeys.length ? 'bg-white' : 'bg-white/20'
-                }`}
-              />
-            ))}
-          </div>
+          {/*<div className="flex gap-1">*/}
+          {/*  {Object.keys(vocabulary).map((_, idx) => (*/}
+          {/*    <div*/}
+          {/*      key={idx}*/}
+          {/*      className={`w-2 h-2 rounded-full transition-all ${*/}
+          {/*        idx < Object.keys(vocabulary).length - shuffledKeys.length ? 'bg-green-400' : idx === Object.keys(vocabulary).length - shuffledKeys.length ? 'bg-white' : 'bg-white/20'*/}
+          {/*      }`}*/}
+          {/*    />*/}
+          {/*  ))}*/}
+          {/*</div>*/}
         </div>
 
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
