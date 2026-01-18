@@ -1,6 +1,6 @@
 interface CategorySelectorProps {
-  categories: ('Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | null)[];
-  onCategoryChange: (category: 'Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | null) => void;
+  categories: ('Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | 'Цифры (0-9)' | 'Цифры (10-90)' | null)[];
+  onCategoryChange: (category: 'Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | 'Цифры (0-9)' | 'Цифры (10-90)' | null) => void;
 }
 
 export const CategorySelector: React.FC<CategorySelectorProps> = (

@@ -3,7 +3,7 @@ import {ProgressCounter} from "./components/ProgressCounter.tsx";
 import {CompletionScreen} from "./components/ComplectionScreen.tsx";
 import {CategorySelector} from "./components/CategorySelector.tsx";
 
-const numbersVocabulary = {
+const numbersUpToNine = {
   "0": "Нөл",
   "1": "Бір",
   "2": "Екі",
@@ -14,6 +14,9 @@ const numbersVocabulary = {
   "7": "Жеті",
   "8": "Сегіз",
   "9": "Тоғыз",
+} as const;
+
+const numbersUpToNinety = {
   "10": "Он",
   "20": "Жиырма",
   "30": "Отыз",
@@ -23,6 +26,11 @@ const numbersVocabulary = {
   "70": "Жетпіс",
   "80": "Сексен",
   "90": "Тоқсан",
+} as const;
+
+const numbersVocabulary = {
+  ...numbersUpToNine,
+  ...numbersUpToNinety,
   "100": "Жүз",
   "1000": "Мың",
   "Мало": "Аз",
@@ -64,6 +72,8 @@ const vocabulary = {
 const vocabularyMap = {
   'Все слова': vocabulary,
   'Приветственные': hiVocabulary,
+  'Цифры (0-9)': numbersUpToNine,
+  'Цифры (10-90)': numbersUpToNinety,
   'Цифры': numbersVocabulary,
   'Общие': commonVocabulary
 } as const
@@ -84,7 +94,7 @@ function maskWord(word: string | null) {
 }
 
 export default function FlashcardApp() {
-  const [mode, setMode] = useState<'Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | null>(null)
+  const [mode, setMode] = useState<'Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | 'Цифры (0-9)' | 'Цифры (10-90)' | null>(null)
 
   const [shuffledKeys, setShuffledKeys]  = useState<Keys[]>([]);
 
@@ -135,7 +145,7 @@ export default function FlashcardApp() {
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
           {!mode && (
             <CategorySelector
-              categories={['Приветственные', 'Цифры', 'Общие', 'Все слова']}
+              categories={['Приветственные', 'Цифры', 'Общие', 'Все слова', 'Цифры (0-9)', 'Цифры (10-90)']}
               onCategoryChange={(category) => {
                 if (!category) {
                   return;
