@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {ProgressCounter} from "./components/ProgressCounter.tsx";
 import {CompletionScreen} from "./components/ComplectionScreen.tsx";
 import {CategorySelector} from "./components/CategorySelector.tsx";
@@ -116,7 +116,8 @@ export default function FlashcardApp() {
 
   const [shuffledKeys, setShuffledKeys]  = useState<Keys[]>([]);
 
-
+  const inputRef = useRef<HTMLInputElement>(null);
+  const successButtonRef = useRef<HTMLButtonElement>(null);
 
   const [userInput, setUserInput] = useState('');
   const [isRevealed, setIsRevealed] = useState(false);
@@ -125,6 +126,16 @@ export default function FlashcardApp() {
   const isFinished = shuffledKeys.length === 0 && mode !== null;
   const currentWord = !isFinished ? shuffledKeys[0] : null;
   const currentAnswer = currentWord ? vocabulary[currentWord] : null;
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [shuffledKeys])
+
+  useEffect(() => {
+    if (isRevealed) {
+      successButtonRef.current?.focus();
+    }
+  }, [isRevealed])
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -237,6 +248,7 @@ export default function FlashcardApp() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
+                  ref={inputRef}
                   type="text"
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
@@ -266,6 +278,7 @@ export default function FlashcardApp() {
                         </button>
                       )}
                       <button
+                        ref={successButtonRef}
                         type="button"
                         onClick={handleRight}
                         className="flex-1 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
