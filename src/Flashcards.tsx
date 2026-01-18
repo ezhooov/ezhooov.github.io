@@ -118,6 +118,7 @@ export default function FlashcardApp() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const successButtonRef = useRef<HTMLButtonElement>(null);
+  const errorButtonRef = useRef<HTMLButtonElement>(null);
 
   const [userInput, setUserInput] = useState('');
   const [isRevealed, setIsRevealed] = useState(false);
@@ -132,10 +133,17 @@ export default function FlashcardApp() {
   }, [shuffledKeys])
 
   useEffect(() => {
-    if (isRevealed) {
-      successButtonRef.current?.focus();
+    if (!isRevealed) {
+      return
     }
-  }, [isRevealed])
+
+
+    if (isCorrect) {
+      successButtonRef.current?.focus();
+    } else {
+      errorButtonRef.current?.focus();
+    }
+  }, [isRevealed, isCorrect])
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -270,6 +278,7 @@ export default function FlashcardApp() {
                     <div className="flex gap-4 w-full">
                       {!isCorrect && (
                         <button
+                          ref={errorButtonRef}
                           type="button"
                           onClick={handleWrong}
                           className="flex-1 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
