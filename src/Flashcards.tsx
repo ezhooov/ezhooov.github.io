@@ -145,6 +145,14 @@ export default function FlashcardApp() {
     }
   }, [isRevealed, isCorrect])
 
+  const restart = () => {
+    if (mode) {
+      setShuffledKeys(
+        shuffleArray(Object.keys(vocabularyMap[mode]) as Keys[])
+      )
+    }
+  }
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!isRevealed && currentAnswer) {
@@ -169,7 +177,7 @@ export default function FlashcardApp() {
 
   if (isFinished) {
     return (
-      <CompletionScreen totalCards={Object.keys(vocabularyMap[mode]).length} />
+      <CompletionScreen totalCards={mode ? Object.keys(vocabularyMap[mode]).length : 0} restart={restart} />
     );
   }
 
