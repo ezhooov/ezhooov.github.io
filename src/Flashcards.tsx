@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import {ProgressCounter} from "./components/ProgressCounter.tsx";
 import {CompletionScreen} from "./components/ComplectionScreen.tsx";
 import {CategorySelector} from "./components/CategorySelector.tsx";
+import type {TMode} from "./types.ts";
 
 const numbersUpToNine = {
   "0": "Нөл",
@@ -50,18 +51,16 @@ const hiVocabulary = {
   "До свидания / Будьте здоровы (ко многим людям, уважительно)": "Сау болыңыздар"
 } as const;
 
-const commonVocabulary = {
-  "Человек": "Адам",
-  "Девушка, дочь": "Қыз",
-  "Сын": "Ұл",
-  "Парень": "Жігіт",
+const othersVocabulary = {
   "Книга": "Кітап",
   "Земля": "Жер",
   "Вода": "Су",
   "Слово": "Сөз",
   "Город": "Қала",
   "Улица": "Көше",
+} as const;
 
+const personVocabulary = {
   "Друг": "Дос",
   "Подруга": "Құрбы",
   "Учитель": "Мұғалім",
@@ -70,7 +69,13 @@ const commonVocabulary = {
   "Юрист": "Заңгер",
   "Ученик": "Оқушы",
   "Студент": "Студент",
+  "Человек": "Адам",
+  "Девушка, дочь": "Қыз",
+  "Сын": "Ұл",
+  "Парень": "Жігіт",
+} as const
 
+const pronounVocabulary = {
   "Я": "Мен",
   "Мы": "Біз",
   "Ты": "Сен",
@@ -79,21 +84,25 @@ const commonVocabulary = {
   "Вы (ко многим людям уважительно)": "Сіздер",
   "Он, она, оно": "Ол",
   "Они": "Олар"
-} as const;
+} as const
 
 const vocabulary = {
-  ...commonVocabulary,
+  ...personVocabulary,
+  ...othersVocabulary,
+  ...pronounVocabulary,
   ...hiVocabulary,
   ...numbersVocabulary
 } as const;
 
 const vocabularyMap = {
   'Все слова': vocabulary,
+  'Местоимения' : pronounVocabulary,
+  'О человеке': personVocabulary,
   'Приветственные': hiVocabulary,
   'Цифры (0-9)': numbersUpToNine,
   'Цифры (10-90)': numbersUpToNinety,
   'Цифры': numbersVocabulary,
-  'Общие': commonVocabulary
+  'Прочие': othersVocabulary
 } as const
 
 type Keys = keyof typeof vocabulary;
@@ -112,7 +121,7 @@ function maskWord(word: string | null) {
 }
 
 export default function FlashcardApp() {
-  const [mode, setMode] = useState<'Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | 'Цифры (0-9)' | 'Цифры (10-90)' | null>(null)
+  const [mode, setMode] = useState<TMode | null>(null)
 
   const [shuffledKeys, setShuffledKeys]  = useState<Keys[]>([]);
 
@@ -175,7 +184,7 @@ export default function FlashcardApp() {
     setIsCorrect(null);
   };
 
-  const onCategoryChange = (category: 'Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | 'Цифры (0-9)' | 'Цифры (10-90)' | null) => {
+  const onCategoryChange = (category: TMode | null) => {
     if (!category) {
       return;
     }
@@ -208,7 +217,7 @@ export default function FlashcardApp() {
               />
               <hr className="my-4 border-t border-gray-300/40"/>
               <CategorySelector
-                categories={['Приветственные', 'Общие']}
+                categories={['Приветственные', 'О человеке', 'Местоимения', 'Прочие']}
                 onCategoryChange={onCategoryChange}
               />
               <hr className="my-4 border-t border-gray-300/40"/>
