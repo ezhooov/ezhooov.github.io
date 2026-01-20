@@ -48,8 +48,21 @@ const hiVocabulary = {
   "Пока / Будь здоров (одному человеку, фамильярно)": "Сау бол",
   "Пока / Будьте здоровы (ко многим людям, фамильярно)": "Сау болыңдар",
   "До свидания / Будьте здоровы (к одному человеку, уважительно)": "Сау болыңыз",
-  "До свидания / Будьте здоровы (ко многим людям, уважительно)": "Сау болыңыздар"
+  "До свидания / Будьте здоровы (ко многим людям, уважительно)": "Сау болыңыздар",
+  "Доброе утро": "Қайырлы таң",
+  "Добрый день": "Қайырлы күн",
+  "Добрый вечер": "Қайырлы кеш / Кеш жарық"
 } as const;
+
+const adjectivesVocabulary = {
+  "Красивый": "Әдемі/сұлу",
+  "Умный": "Ақылды",
+  "Щедрый": "Жомарт",
+  "Скупой": "Сараң",
+  "Богатый": "Бай",
+  "Бедный": "Кедей",
+  "Молодой": "Жас",
+} as const
 
 const othersVocabulary = {
   "Книга": "Кітап",
@@ -73,6 +86,18 @@ const personVocabulary = {
   "Девушка, дочь": "Қыз",
   "Сын": "Ұл",
   "Парень": "Жігіт",
+  "Пенсионер": "Зейнеткер",
+  "Бухгалтер": "Есепші",
+  "Безработный": "Жұмыссыз",
+  "Рабочий": "Жұмысшы",
+  "Начальник": "Бастық",
+  "Проводник": "Жолсерік",
+  "Поэт": "Ақын",
+  "Писатель": "Жазушы",
+  "Водитель": "Жүргізуші",
+  "Бизнесмен": "Кәсіпкер",
+  "Читатель": "Оқырман",
+  "Повар": "Аспаз",
 } as const
 
 const pronounVocabulary = {
@@ -91,7 +116,8 @@ const vocabulary = {
   ...othersVocabulary,
   ...pronounVocabulary,
   ...hiVocabulary,
-  ...numbersVocabulary
+  ...numbersVocabulary,
+  ...adjectivesVocabulary
 } as const;
 
 const vocabularyMap = {
@@ -102,7 +128,8 @@ const vocabularyMap = {
   'Цифры (0-9)': numbersUpToNine,
   'Цифры (10-90)': numbersUpToNinety,
   'Цифры': numbersVocabulary,
-  'Прочие': othersVocabulary
+  'Прочие': othersVocabulary,
+  'Прилагательные': adjectivesVocabulary
 } as const
 
 type Keys = keyof typeof vocabulary;
@@ -217,7 +244,7 @@ export default function FlashcardApp() {
               />
               <hr className="my-4 border-t border-gray-300/40"/>
               <CategorySelector
-                categories={['Приветственные', 'О человеке', 'Местоимения', 'Прочие']}
+                categories={['Приветственные', 'О человеке', 'Местоимения', 'Приветственные', 'Прочие']}
                 onCategoryChange={onCategoryChange}
               />
               <hr className="my-4 border-t border-gray-300/40"/>
