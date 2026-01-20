@@ -175,6 +175,17 @@ export default function FlashcardApp() {
     setIsCorrect(null);
   };
 
+  const onCategoryChange = (category: 'Приветственные' | 'Цифры' | 'Общие' | 'Все слова' | 'Цифры (0-9)' | 'Цифры (10-90)' | null) => {
+    if (!category) {
+      return;
+    }
+
+    setMode(category);
+    setShuffledKeys(
+      shuffleArray(Object.keys(vocabularyMap[category]) as Keys[])
+    )
+  }
+
   if (isFinished) {
     return (
       <CompletionScreen totalCards={mode ? Object.keys(vocabularyMap[mode]).length : 0} restart={restart} />
@@ -189,19 +200,24 @@ export default function FlashcardApp() {
         )}
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
           {!mode && (
-            <CategorySelector
-              categories={['Все слова', 'Приветственные', 'Общие', 'Цифры', 'Цифры (0-9)', 'Цифры (10-90)']}
-              onCategoryChange={(category) => {
-                if (!category) {
-                  return;
-                }
+            <>
+              <h3 className="text-white text-xl font-semibold mb-5 text-center">Выберите категорию слов</h3>
+              <CategorySelector
+                categories={['Все слова']}
+                onCategoryChange={onCategoryChange}
+              />
+              <hr className="my-4 border-t border-gray-300/40"/>
+              <CategorySelector
+                categories={['Приветственные', 'Общие']}
+                onCategoryChange={onCategoryChange}
+              />
+              <hr className="my-4 border-t border-gray-300/40"/>
+              <CategorySelector
+                categories={['Цифры (0-9)', 'Цифры (10-90)', 'Цифры']}
+                onCategoryChange={onCategoryChange}
+              />
+            </>
 
-                setMode(category);
-                setShuffledKeys(
-                  shuffleArray(Object.keys(vocabularyMap[category]) as Keys[])
-                )
-              }}
-            />
           )}
           {mode && (
             <>
