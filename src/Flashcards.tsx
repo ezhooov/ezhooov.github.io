@@ -244,7 +244,7 @@ export default function FlashcardApp() {
               />
               <hr className="my-4 border-t border-gray-300/40"/>
               <CategorySelector
-                categories={['Приветственные', 'О человеке', 'Местоимения', 'Приветственные', 'Прочие']}
+                categories={['Приветственные', 'О человеке', 'Местоимения', 'Прилагательные', 'Прочие']}
                 onCategoryChange={onCategoryChange}
               />
               <hr className="my-4 border-t border-gray-300/40"/>
