@@ -62,6 +62,7 @@ const adjectivesVocabulary = {
   "Богатый": "Бай",
   "Бедный": "Кедей",
   "Молодой": "Жас",
+  "Толстый": "Семіз",
 } as const
 
 const othersVocabulary = {
@@ -73,19 +74,11 @@ const othersVocabulary = {
   "Улица": "Көше",
 } as const;
 
-const personVocabulary = {
-  "Друг": "Дос",
-  "Подруга": "Құрбы",
+const professionsVocabulary = {
   "Учитель": "Мұғалім",
   "Ученый": "Ғалым",
   "Врач": "Дәрігер",
   "Юрист": "Заңгер",
-  "Ученик": "Оқушы",
-  "Студент": "Студент",
-  "Человек": "Адам",
-  "Девушка, дочь": "Қыз",
-  "Сын": "Ұл",
-  "Парень": "Жігіт",
   "Пенсионер": "Зейнеткер",
   "Бухгалтер": "Есепші",
   "Безработный": "Жұмыссыз",
@@ -98,7 +91,37 @@ const personVocabulary = {
   "Бизнесмен": "Кәсіпкер",
   "Читатель": "Оқырман",
   "Повар": "Аспаз",
-} as const
+  "Специалист": "Маман",
+} as const;
+
+const personVocabulary = {
+  "Враг": "Жау",
+  "Казах": "Қазақ",
+  "Русский": "Орыс",
+  "Ученик": "Оқушы",
+  "Студент": "Студент",
+  "Человек": "Адам",
+  "Парень": "Жігіт",
+} as const;
+
+const questionsVocabulary = {
+  "Кто?": "Кім?",
+  "Что?": "Не?",
+  "Какой?": "Қандай?",
+  "Как?": "Қалай?",
+} as const;
+
+const friendsFamilyVocabulary = {
+  "Друг": "Дос",
+  "Подруга": "Құрбы",
+  "Девушка, дочь": "Қыз",
+  "Сын": "Ұл",
+  "Сосед": "Көрші",
+  "Коллега": "Әріптес",
+  "Гость": "Қонақ",
+  "Родственник": "Туыс",
+  "Знакомый": "Таныс",
+} as const;
 
 const pronounVocabulary = {
   "Я": "Мен",
@@ -109,7 +132,7 @@ const pronounVocabulary = {
   "Вы (ко многим людям уважительно)": "Сіздер",
   "Он, она, оно": "Ол",
   "Они": "Олар"
-} as const
+} as const;
 
 const vocabulary = {
   ...personVocabulary,
@@ -117,13 +140,19 @@ const vocabulary = {
   ...pronounVocabulary,
   ...hiVocabulary,
   ...numbersVocabulary,
-  ...adjectivesVocabulary
+  ...adjectivesVocabulary,
+  ...professionsVocabulary,
+  ...friendsFamilyVocabulary,
+  ...questionsVocabulary,
 } as const;
 
 const vocabularyMap = {
   'Все слова': vocabulary,
   'Местоимения' : pronounVocabulary,
-  'О человеке': personVocabulary,
+  'Прочие о человеке': personVocabulary,
+  'Профессии': professionsVocabulary,
+  'Семья и друзья': friendsFamilyVocabulary,
+  'Вопросы': questionsVocabulary,
   'Приветственные': hiVocabulary,
   'Цифры (0-9)': numbersUpToNine,
   'Цифры (10-90)': numbersUpToNinety,
@@ -189,6 +218,10 @@ export default function FlashcardApp() {
     }
   }
 
+  const reset = () => {
+    setMode(null);
+  }
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!isRevealed && currentAnswer) {
@@ -224,7 +257,7 @@ export default function FlashcardApp() {
 
   if (isFinished) {
     return (
-      <CompletionScreen totalCards={mode ? Object.keys(vocabularyMap[mode]).length : 0} restart={restart} />
+      <CompletionScreen totalCards={mode ? Object.keys(vocabularyMap[mode]).length : 0} restart={restart} reset={reset} />
     );
   }
 
@@ -244,7 +277,12 @@ export default function FlashcardApp() {
               />
               <hr className="my-4 border-t border-gray-300/40"/>
               <CategorySelector
-                categories={['Приветственные', 'О человеке', 'Местоимения', 'Прилагательные', 'Прочие']}
+                categories={['Приветственные', 'Местоимения', 'Прилагательные', 'Прочие']}
+                onCategoryChange={onCategoryChange}
+              />
+              <hr className="my-4 border-t border-gray-300/40"/>
+              <CategorySelector
+                categories={['Семья и друзья', 'Профессии', 'Прочие о человеке']}
                 onCategoryChange={onCategoryChange}
               />
               <hr className="my-4 border-t border-gray-300/40"/>
