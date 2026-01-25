@@ -95,14 +95,15 @@ interface IProps {
 
 export default function Multiple({ onBack }: IProps) {
   const {
+    totalMilliseconds,
     seconds,
     pause: pauseStopwatch,
     reset: resetStopwatch
   } = useStopwatch({
-    autoStart: true
+    autoStart: true,
+    interval: 50
   })
 
-  //
   const [dictionary] = useState(
     () =>
       [
@@ -158,6 +159,9 @@ export default function Multiple({ onBack }: IProps) {
     }
   }, [dictionary, index, onBack])
 
+  const progress = totalMilliseconds / 50
+  const progressLimited = progress < 100 ? progress : 100
+
   return (
     <>
       <button
@@ -180,7 +184,7 @@ export default function Multiple({ onBack }: IProps) {
           }}
           className='mb-8'
         >
-          <div className='flex items-center justify-center gap-2 mb-6'>
+          <div className='flex items-center justify-center gap-2 mb-6 h-12'>
             <span className='text-2xl font-semibold text-white'>{word} </span>
             {!isChecking && (
               <input
@@ -219,20 +223,36 @@ export default function Multiple({ onBack }: IProps) {
             )}
           </div>
         </form>
-        <div className='flex justify-around pt-6 border-t border-white/20'>
-          <div className='text-center flex-1'>
-            <div className='text-3xl font-bold text-green-400'>{fast}</div>
-            <div className='text-sm text-white/60 mt-1'>Быстро</div>
+
+        <>
+          <div className={`mb-6 h-3 ${isChecking ? 'invisible' : 'visible'}`}>
+            {!isChecking && (
+              <div className='w-full h-2 bg-white/20 rounded-full overflow-hidden'>
+                <div
+                  className='h-full bg-white rounded-full transition-all duration-100'
+                  style={{
+                    width: `${progressLimited}%`,
+                    backgroundColor: `hsl(${120 - progressLimited * 1.2}, 70%, 50%)`
+                  }}
+                />
+              </div>
+            )}
           </div>
-          <div className='text-center flex-1'>
-            <div className='text-3xl font-bold text-yellow-400'>{slow}</div>
-            <div className='text-sm text-white/60 mt-1'>Медленно</div>
+          <div className='flex justify-around'>
+            <div className='text-center flex-1'>
+              <div className='text-3xl font-bold text-green-400'>{fast}</div>
+              <div className='text-sm text-white/60 mt-1'>Быстро</div>
+            </div>
+            <div className='text-center flex-1'>
+              <div className='text-3xl font-bold text-yellow-400'>{slow}</div>
+              <div className='text-sm text-white/60 mt-1'>Медленно</div>
+            </div>
+            <div className='text-center flex-1'>
+              <div className='text-3xl font-bold text-red-400'>{failed}</div>
+              <div className='text-sm text-white/60 mt-1'>Неправильно</div>
+            </div>
           </div>
-          <div className='text-center flex-1'>
-            <div className='text-3xl font-bold text-red-400'>{failed}</div>
-            <div className='text-sm text-white/60 mt-1'>Неправильно</div>
-          </div>
-        </div>
+        </>
       </div>
     </>
   )
