@@ -1,5 +1,6 @@
 import FlashcardApp from './Flashcards.tsx'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import Multiple from './Multiple.tsx'
 
 function App() {
   const [page, setPage] = useState<string | null>(() => {
@@ -34,11 +35,11 @@ function App() {
     return () => window.removeEventListener('popstate', handler)
   }, [])
 
-  const onBack = () => {
+  const onBack = useCallback(() => {
     window.history.pushState({}, '', `${window.location.pathname}`)
 
     setPage(null)
-  }
+  }, [setPage])
 
   const onPageChange = (page: string) => {
     const params = new URLSearchParams()
@@ -71,6 +72,7 @@ function App() {
           </div>
         )}
         {page === 'flashcard' && <FlashcardApp onBack={onBack} />}
+        {page === 'multiple' && <Multiple onBack={onBack} />}
       </div>
     </div>
   )

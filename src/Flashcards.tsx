@@ -3,6 +3,7 @@ import { ProgressCounter } from './components/ProgressCounter.tsx'
 import { CompletionScreen } from './components/ComplectionScreen.tsx'
 import { CategorySelector } from './components/CategorySelector.tsx'
 import type { TMode } from './types.ts'
+import { shuffleArray } from './utils/shuffleArray.ts'
 
 const numbersUpToNine = {
   '0': 'Нөл',
@@ -165,15 +166,6 @@ const vocabularyMap = {
 
 type Keys = keyof typeof vocabulary
 
-function shuffleArray(array: Keys[]) {
-  const shuffled = [...array]
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-  return shuffled
-}
-
 function maskWord(word: string | null) {
   return (
     word
@@ -223,7 +215,9 @@ export default function FlashcardApp({ onBack }: IProps) {
 
   const restart = () => {
     if (mode) {
-      setShuffledKeys(shuffleArray(Object.keys(vocabularyMap[mode]) as Keys[]))
+      setShuffledKeys(
+        shuffleArray(Object.keys(vocabularyMap[mode]) as Keys[]) as Keys[]
+      )
     }
   }
 
@@ -262,7 +256,7 @@ export default function FlashcardApp({ onBack }: IProps) {
 
     setMode(category)
     setShuffledKeys(
-      shuffleArray(Object.keys(vocabularyMap[category]) as Keys[])
+      shuffleArray(Object.keys(vocabularyMap[category]) as Keys[]) as Keys[]
     )
   }
 
