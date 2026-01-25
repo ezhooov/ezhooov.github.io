@@ -1,9 +1,7 @@
-import FlashcardApp from "./Flashcards.tsx";
+import FlashcardApp from './Flashcards.tsx'
 
 function App() {
-  return (
-    <FlashcardApp />
-  )
+  return <FlashcardApp />
 }
 
 export default App

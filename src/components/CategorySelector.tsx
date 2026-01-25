@@ -1,19 +1,17 @@
-import type {TMode} from "../types.ts";
+import type { TMode } from '../types.ts'
 
 interface CategorySelectorProps {
-  categories: (TMode | null)[];
-  onCategoryChange: (category: TMode | null) => void;
+  categories: (TMode | null)[]
+  onCategoryChange: (category: TMode | null) => void
 }
 
-export const CategorySelector: React.FC<CategorySelectorProps> = (
-  {
-    categories,
-    onCategoryChange
-  }) => {
-
+export const CategorySelector: React.FC<CategorySelectorProps> = ({
+  categories,
+  onCategoryChange
+}) => {
   return (
-    <div className="mb-6 text-sm">
-      <div className="grid grid-cols-2 gap-2">
+    <div className='mb-6 text-sm'>
+      <div className='grid grid-cols-2 gap-2'>
         {categories.map((category, categoryIndex) => (
           <button
             key={category}
@@ -25,5 +23,5 @@ export const CategorySelector: React.FC<CategorySelectorProps> = (
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
