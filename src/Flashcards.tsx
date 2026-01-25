@@ -184,7 +184,11 @@ function maskWord(word: string | null) {
   )
 }
 
-export default function FlashcardApp() {
+interface IProps {
+  onBack?: () => void
+}
+
+export default function FlashcardApp({ onBack }: IProps) {
   const [mode, setMode] = useState<TMode | null>(null)
 
   const [shuffledKeys, setShuffledKeys] = useState<Keys[]>([])
@@ -273,185 +277,188 @@ export default function FlashcardApp() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4'>
-      <div className='w-full max-w-md'>
-        {mode && (
-          <ProgressCounter
-            completed={
-              Object.keys(vocabularyMap[mode]).length - shuffledKeys.length
-            }
-            total={Object.keys(vocabularyMap[mode]).length}
-          />
+    <>
+      {mode && (
+        <ProgressCounter
+          completed={
+            Object.keys(vocabularyMap[mode]).length - shuffledKeys.length
+          }
+          total={Object.keys(vocabularyMap[mode]).length}
+        />
+      )}
+      {!mode && (
+        <button
+          onClick={onBack}
+          className='inline-flex items-center gap-2 rounded-lg text-white mb-2 font-medium text-base bg-transparent border-none cursor-pointer transition-opacity hover:opacity-80'
+        >
+          <span className='text-xl'>←</span>
+          <span>Назад</span>
+        </button>
+      )}
+      <div className='bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20'>
+        {!mode && (
+          <>
+            <h3 className='text-white text-xl font-semibold mb-5 text-center'>
+              Выберите категорию слов
+            </h3>
+            <CategorySelector
+              categories={['Все слова']}
+              onCategoryChange={onCategoryChange}
+            />
+            <hr className='my-4 border-t border-gray-300/40' />
+            <CategorySelector
+              categories={[
+                'Приветственные',
+                'Местоимения',
+                'Прилагательные',
+                'Прочие'
+              ]}
+              onCategoryChange={onCategoryChange}
+            />
+            <hr className='my-4 border-t border-gray-300/40' />
+            <CategorySelector
+              categories={['Семья и друзья', 'Профессии', 'Прочие о человеке']}
+              onCategoryChange={onCategoryChange}
+            />
+            <hr className='my-4 border-t border-gray-300/40' />
+            <CategorySelector
+              categories={['Цифры (0-9)', 'Цифры (10-90)', 'Цифры']}
+              onCategoryChange={onCategoryChange}
+            />
+          </>
         )}
-        <div className='bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20'>
-          {!mode && (
-            <>
-              <h3 className='text-white text-xl font-semibold mb-5 text-center'>
-                Выберите категорию слов
-              </h3>
-              <CategorySelector
-                categories={['Все слова']}
-                onCategoryChange={onCategoryChange}
-              />
-              <hr className='my-4 border-t border-gray-300/40' />
-              <CategorySelector
-                categories={[
-                  'Приветственные',
-                  'Местоимения',
-                  'Прилагательные',
-                  'Прочие'
-                ]}
-                onCategoryChange={onCategoryChange}
-              />
-              <hr className='my-4 border-t border-gray-300/40' />
-              <CategorySelector
-                categories={[
-                  'Семья и друзья',
-                  'Профессии',
-                  'Прочие о человеке'
-                ]}
-                onCategoryChange={onCategoryChange}
-              />
-              <hr className='my-4 border-t border-gray-300/40' />
-              <CategorySelector
-                categories={['Цифры (0-9)', 'Цифры (10-90)', 'Цифры']}
-                onCategoryChange={onCategoryChange}
-              />
-            </>
-          )}
-          {mode && (
-            <>
-              <div className='text-center mb-8'>
-                <span className='text-xs uppercase tracking-wider text-white/40 mb-2 block'>
-                  Слово
-                </span>
-                <h2 className='text-3xl font-bold text-white'>{currentWord}</h2>
-              </div>
-              <div className='text-center mb-8'>
-                <span className='text-xs uppercase tracking-wider text-white/40 mb-2 block'>
-                  Перевод
-                </span>
-                <div className='text-2xl font-mono transition-all duration-300'>
-                  {isRevealed ? (
-                    isCorrect ? (
-                      // Полностью правильно - показываем только currentAnswer серым
-                      <span className='text-green-400'>{currentAnswer}</span>
-                    ) : (
-                      (() => {
-                        if (!currentAnswer) {
-                          return null
-                        }
-
-                        // Проверяем, есть ли совпадение в начале
-                        let matchLength = 0
-                        const minLength = Math.min(
-                          userInput.length,
-                          currentAnswer.length
-                        )
-                        for (let i = 0; i < minLength; i++) {
-                          if (
-                            userInput[i].toLowerCase() ===
-                            currentAnswer[i].toLowerCase()
-                          ) {
-                            matchLength++
-                          } else {
-                            break
-                          }
-                        }
-
-                        if (matchLength > 0) {
-                          return (
-                            <>
-                              <span className='text-green-400'>
-                                {userInput.slice(0, matchLength)}
-                              </span>
-                              <span className='text-red-400'>
-                                {userInput.slice(matchLength)}
-                              </span>
-                              <span className='text-white/50'> - </span>
-                              <span className='text-green-400'>
-                                {currentAnswer.slice(0, matchLength)}
-                              </span>
-                              <span className='text-white/50'>
-                                {currentAnswer.slice(matchLength)}
-                              </span>
-                            </>
-                          )
-                        } else {
-                          return (
-                            <>
-                              {userInput.length > 0 && (
-                                <>
-                                  <span className='text-red-400'>
-                                    {userInput}
-                                  </span>
-                                  <span className='text-white/50'> - </span>
-                                </>
-                              )}
-                              <span className='text-white/50'>
-                                {currentAnswer}
-                              </span>
-                            </>
-                          )
-                        }
-                      })()
-                    )
+        {mode && (
+          <>
+            <div className='text-center mb-8'>
+              <span className='text-xs uppercase tracking-wider text-white/40 mb-2 block'>
+                Слово
+              </span>
+              <h2 className='text-3xl font-bold text-white'>{currentWord}</h2>
+            </div>
+            <div className='text-center mb-8'>
+              <span className='text-xs uppercase tracking-wider text-white/40 mb-2 block'>
+                Перевод
+              </span>
+              <div className='text-2xl font-mono transition-all duration-300'>
+                {isRevealed ? (
+                  isCorrect ? (
+                    // Полностью правильно - показываем только currentAnswer серым
+                    <span className='text-green-400'>{currentAnswer}</span>
                   ) : (
-                    <span className='text-white/50'>
-                      {maskWord(currentAnswer)}
-                    </span>
-                  )}
-                </div>
-              </div>
+                    (() => {
+                      if (!currentAnswer) {
+                        return null
+                      }
 
-              <form onSubmit={handleSubmit} className='space-y-4'>
-                <input
-                  ref={inputRef}
-                  type='text'
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  placeholder='Введите перевод...'
-                  disabled={isRevealed}
-                  className='w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all disabled:opacity-50'
-                  autoFocus
-                />
+                      // Проверяем, есть ли совпадение в начале
+                      let matchLength = 0
+                      const minLength = Math.min(
+                        userInput.length,
+                        currentAnswer.length
+                      )
+                      for (let i = 0; i < minLength; i++) {
+                        if (
+                          userInput[i].toLowerCase() ===
+                          currentAnswer[i].toLowerCase()
+                        ) {
+                          matchLength++
+                        } else {
+                          break
+                        }
+                      }
 
-                {!isRevealed ? (
-                  <button
-                    type='submit'
-                    className='w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg'
-                  >
-                    Проверить
-                  </button>
+                      if (matchLength > 0) {
+                        return (
+                          <>
+                            <span className='text-green-400'>
+                              {userInput.slice(0, matchLength)}
+                            </span>
+                            <span className='text-red-400'>
+                              {userInput.slice(matchLength)}
+                            </span>
+                            <span className='text-white/50'> - </span>
+                            <span className='text-green-400'>
+                              {currentAnswer.slice(0, matchLength)}
+                            </span>
+                            <span className='text-white/50'>
+                              {currentAnswer.slice(matchLength)}
+                            </span>
+                          </>
+                        )
+                      } else {
+                        return (
+                          <>
+                            {userInput.length > 0 && (
+                              <>
+                                <span className='text-red-400'>
+                                  {userInput}
+                                </span>
+                                <span className='text-white/50'> - </span>
+                              </>
+                            )}
+                            <span className='text-white/50'>
+                              {currentAnswer}
+                            </span>
+                          </>
+                        )
+                      }
+                    })()
+                  )
                 ) : (
-                  <div className='space-y-3'>
-                    <div className='flex gap-4 w-full'>
-                      {!isCorrect && (
-                        <button
-                          ref={errorButtonRef}
-                          type='button'
-                          onClick={handleWrong}
-                          className='flex-1 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg'
-                        >
-                          Неверно
-                        </button>
-                      )}
-                      <button
-                        ref={successButtonRef}
-                        type='button'
-                        onClick={handleRight}
-                        className='flex-1 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg'
-                      >
-                        Верно
-                      </button>
-                    </div>
-                  </div>
+                  <span className='text-white/50'>
+                    {maskWord(currentAnswer)}
+                  </span>
                 )}
-              </form>
-            </>
-          )}
-        </div>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className='space-y-4'>
+              <input
+                ref={inputRef}
+                type='text'
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder='Введите перевод...'
+                disabled={isRevealed}
+                className='w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all disabled:opacity-50'
+                autoFocus
+              />
+
+              {!isRevealed ? (
+                <button
+                  type='submit'
+                  className='w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg'
+                >
+                  Проверить
+                </button>
+              ) : (
+                <div className='space-y-3'>
+                  <div className='flex gap-4 w-full'>
+                    {!isCorrect && (
+                      <button
+                        ref={errorButtonRef}
+                        type='button'
+                        onClick={handleWrong}
+                        className='flex-1 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg'
+                      >
+                        Неверно
+                      </button>
+                    )}
+                    <button
+                      ref={successButtonRef}
+                      type='button'
+                      onClick={handleRight}
+                      className='flex-1 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white font-semibold rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg'
+                    >
+                      Верно
+                    </button>
+                  </div>
+                </div>
+              )}
+            </form>
+          </>
+        )}
       </div>
-    </div>
+    </>
   )
 }
