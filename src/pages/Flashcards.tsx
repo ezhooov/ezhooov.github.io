@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { ProgressCounter } from './components/ProgressCounter.tsx'
-import { CompletionScreen } from './components/ComplectionScreen.tsx'
-import { CategorySelector } from './components/CategorySelector.tsx'
-import type { TMode } from './types.ts'
-import { shuffleArray } from './utils/shuffleArray.ts'
+import { ProgressCounter } from '../components/ProgressCounter.tsx'
+import { CompletionScreen } from '../components/ComplectionScreen.tsx'
+import { CategorySelector } from '../components/CategorySelector.tsx'
+import type { TMode } from '../types.ts'
+import { shuffleArray } from '../utils/shuffleArray.ts'
 
 const numbersUpToNine = {
   '0': 'Нөл',

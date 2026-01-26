@@ -1,6 +1,7 @@
-import FlashcardApp from './Flashcards.tsx'
+import FlashcardApp from './pages/Flashcards.tsx'
 import { useCallback, useEffect, useState } from 'react'
-import Multiple from './Multiple.tsx'
+import Multiple from './pages/Multiple.tsx'
+import FirstPerson from './pages/FirstPerson.tsx'
 
 function App() {
   const [page, setPage] = useState<string | null>(() => {
@@ -8,7 +9,11 @@ function App() {
 
     const pageParam = params.get('page')
 
-    if (pageParam === 'flashcard' || pageParam === 'multiple') {
+    if (
+      pageParam === 'flashcard' ||
+      pageParam === 'multiple' ||
+      pageParam === 'firstPerson'
+    ) {
       return pageParam
     }
 
@@ -24,6 +29,7 @@ function App() {
       if (
         pageParam === 'flashcard' ||
         pageParam === 'multiple' ||
+        pageParam === 'firstPerson' ||
         pageParam === null
       ) {
         setPage(pageParam)
@@ -57,22 +63,29 @@ function App() {
           <div className='bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20'>
             <div className='grid grid-cols-2 gap-2'>
               <button
+                onClick={() => onPageChange('flashcard')}
+                className={`col-span-2 px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
+              >
+                Слова
+              </button>
+              <button
                 onClick={() => onPageChange('multiple')}
                 className={`px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
               >
                 Множественные окончания
               </button>
               <button
-                onClick={() => onPageChange('flashcard')}
+                onClick={() => onPageChange('firstPerson')}
                 className={`px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
               >
-                Слова
+                Личные окончания - 1 лицо
               </button>
             </div>
           </div>
         )}
         {page === 'flashcard' && <FlashcardApp onBack={onBack} />}
         {page === 'multiple' && <Multiple onBack={onBack} />}
+        {page === 'firstPerson' && <FirstPerson onBack={onBack} />}
       </div>
     </div>
   )
