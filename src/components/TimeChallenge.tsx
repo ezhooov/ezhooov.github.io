@@ -89,7 +89,7 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
 
       <div className='bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20 w-full max-w-md'>
         <div className='text-center mb-8'>
-          <h2 className='text-3xl font-bold text-white'>{translation}</h2>
+          <h2 className='text-xl font-bold text-white'>{translation}</h2>
         </div>
         <form
           onSubmit={(e) => {
@@ -100,29 +100,29 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
           className='mb-8'
         >
           <div className='flex items-center justify-center gap-2 mb-6 h-12'>
-            <span className='text-2xl font-semibold text-white'>{word} </span>
+            <span className='text-l font-semibold text-white'>{word} </span>
             {!isChecking && (
               <input
                 type='text'
                 value={input}
                 onChange={(e) => setInput(e.target.value.slice(0, 3))}
                 maxLength={3}
-                className='w-16 px-2 py-1 text-center text-xl font-semibold bg-white/20 border-2 border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/60 focus:bg-white/30 transition-all'
+                className='w-12 px-0 py-1 text-center text-l font-semibold bg-white/20 border-2 border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/60 focus:bg-white/30 transition-all'
                 placeholder='...'
                 autoFocus
               />
             )}
             {isChecking && input.toLowerCase() === check.toLowerCase() && (
-              <span className='text-2xl font-semibold text-green-400'>
+              <span className='text-l font-semibold text-green-400'>
                 {check}
               </span>
             )}
             {isChecking && input.toLowerCase() !== check.toLowerCase() && (
               <>
-                <span className='text-2xl font-semibold text-red-400 line-through'>
+                <span className='text-l font-semibold text-red-400 line-through'>
                   {input}
                 </span>{' '}
-                <span className='text-2xl font-semibold text-green-400'>
+                <span className='text-l font-semibold text-green-400'>
                   {check}
                 </span>
               </>
