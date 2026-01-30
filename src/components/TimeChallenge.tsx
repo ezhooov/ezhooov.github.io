@@ -36,6 +36,8 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
   const [fast, setFast] = useState(0)
   const [slow, setSlow] = useState(0)
 
+  const [isHiddenTimer, setIsHiddenTimer] = useState(false)
+
   const [isChecking, setIsChecking] = useState(false)
 
   const [translation, check, word] = dictionary[index]
@@ -140,7 +142,9 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
         </form>
 
         <>
-          <div className={`mb-6 h-3 ${isChecking ? 'invisible' : 'visible'}`}>
+          <div
+            className={`mb-6 h-3 ${isChecking || isHiddenTimer ? 'invisible' : 'visible'}`}
+          >
             {!isChecking && (
               <div className='w-full h-2 bg-white/20 rounded-full overflow-hidden'>
                 <div
@@ -153,21 +157,46 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
               </div>
             )}
           </div>
-          <div className='flex justify-around'>
-            <div className='text-center flex-1'>
-              <div className='text-3xl font-bold text-green-400'>{fast}</div>
-              <div className='text-sm text-white/60 mt-1'>Быстро</div>
-            </div>
-            <div className='text-center flex-1'>
-              <div className='text-3xl font-bold text-yellow-400'>{slow}</div>
-              <div className='text-sm text-white/60 mt-1'>Медленно</div>
-            </div>
+          <div className='flex justify-around mb-8'>
+            {!isHiddenTimer && (
+              <>
+                <div className='text-center flex-1'>
+                  <div className='text-3xl font-bold text-green-400'>
+                    {fast}
+                  </div>
+                  <div className='text-sm text-white/60 mt-1'>Быстро</div>
+                </div>
+                <div className='text-center flex-1'>
+                  <div className='text-3xl font-bold text-yellow-400'>
+                    {slow}
+                  </div>
+                  <div className='text-sm text-white/60 mt-1'>Медленно</div>
+                </div>
+              </>
+            )}
+            {isHiddenTimer && (
+              <div className='text-center flex-1'>
+                <div className='text-3xl font-bold text-green-400'>
+                  {fast + slow}
+                </div>
+                <div className='text-sm text-white/60 mt-1'>Правильно</div>
+              </div>
+            )}
             <div className='text-center flex-1'>
               <div className='text-3xl font-bold text-red-400'>{failed}</div>
               <div className='text-sm text-white/60 mt-1'>Неправильно</div>
             </div>
           </div>
         </>
+        <div>
+          <button
+            className='w-full px-3 py-2 text-xs bg-white/10 border border-white/30 rounded-md text-white hover:bg-white/20 transition-colors ml-2'
+            type='button'
+            onClick={() => setIsHiddenTimer((prev) => !prev)}
+          >
+            {isHiddenTimer ? 'Показать таймер' : 'Скрыть таймер'}
+          </button>
+        </div>
       </div>
     </>
   )
