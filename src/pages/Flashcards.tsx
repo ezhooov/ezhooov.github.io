@@ -5,6 +5,24 @@ import { CategorySelector } from '../components/CategorySelector.tsx'
 import type { TMode } from '../types.ts'
 import { shuffleArray } from '../utils/shuffleArray.ts'
 
+const verbs = {
+  Приходить: 'Келу',
+  Уходить: 'Кету',
+  Входить: 'Кіру',
+  Выходить: 'Шығу',
+  Искать: 'Іздеу',
+  Находить: 'Табу',
+  Торопиться: 'Асығу',
+  Опаздывать: 'Кешігу',
+  Работать: 'Жұмыс істеу',
+  Писать: 'Жазу',
+  Разговаривать: 'Сөйлесу',
+  Брать: 'Алу',
+  Давать: 'Беру',
+  Видеть: 'Көру',
+  Смотреть: 'Қарау'
+} as const
+
 const numbersUpToNine = {
   '0': 'Нөл',
   '1': 'Бір',
@@ -191,7 +209,8 @@ const vocabulary = {
   ...adjectivesVocabulary,
   ...professionsVocabulary,
   ...friendsFamilyVocabulary,
-  ...questionsVocabulary
+  ...questionsVocabulary,
+  ...verbs
 } as const
 
 const vocabularyMap = {
@@ -206,7 +225,8 @@ const vocabularyMap = {
   'Цифры (10-90)': numbersUpToNinety,
   Цифры: numbersVocabulary,
   Прочие: othersVocabulary,
-  Прилагательные: adjectivesVocabulary
+  Прилагательные: adjectivesVocabulary,
+  Глаголы: verbs
 } as const
 
 type Keys = keyof typeof vocabulary
@@ -350,6 +370,7 @@ export default function FlashcardApp({ onBack }: IProps) {
                 'Приветственные',
                 'Местоимения',
                 'Прилагательные',
+                'Глаголы',
                 'Прочие'
               ]}
               onCategoryChange={onCategoryChange}
