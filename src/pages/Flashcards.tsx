@@ -5,7 +5,7 @@ import { CategorySelector } from '../components/CategorySelector.tsx'
 import type { TMode } from '../types.ts'
 import { shuffleArray } from '../utils/shuffleArray.ts'
 
-const verbs = {
+const verbs1 = {
   Приходить: 'Келу',
   Уходить: 'Кету',
   Входить: 'Кіру',
@@ -21,6 +21,30 @@ const verbs = {
   Давать: 'Беру',
   Видеть: 'Көру',
   Смотреть: 'Қарау'
+} as const
+
+const verbs2 = {
+  Понимать: 'Түсіну',
+  'Идти (куда-то)': 'Бару',
+  'Ходить, двигаться': 'Жүру',
+  Лежать: 'Жату',
+  Сидеть: 'Отыру',
+  'Стоять, проживать': 'Тұру',
+  Открывать: 'Ашу',
+  Закрывать: 'Жабу',
+  Шить: 'Тігу'
+} as const
+
+const verbs3 = {
+  Думать: 'Ойлау',
+  Играть: 'Ойнау',
+  Верить: 'Сену',
+  Ждать: 'Күту',
+  Говорить: 'Айту',
+  Класть: 'Қою',
+  'Любить, целовать': 'Сүю',
+  'Читать, учиться': 'Оқу (искл.)',
+  Слышать: 'Есту (искл.)'
 } as const
 
 const numbersUpToNine = {
@@ -200,6 +224,12 @@ const pronounVocabulary = {
   Их: 'Олардың'
 } as const
 
+const verbs = {
+  ...verbs1,
+  ...verbs2,
+  ...verbs3
+}
+
 const vocabulary = {
   ...personVocabulary,
   ...othersVocabulary,
@@ -226,7 +256,10 @@ const vocabularyMap = {
   Цифры: numbersVocabulary,
   Прочие: othersVocabulary,
   Прилагательные: adjectivesVocabulary,
-  Глаголы: verbs
+  'Глаголы 1': verbs1,
+  'Глаголы 2': verbs2,
+  'Глаголы 3': verbs3,
+  'Все глаголы': verbs
 } as const
 
 type Keys = keyof typeof vocabulary
@@ -370,12 +403,22 @@ export default function FlashcardApp({ onBack }: IProps) {
                 'Приветственные',
                 'Местоимения',
                 'Прилагательные',
-                'Глаголы',
                 'Прочие'
               ]}
               onCategoryChange={onCategoryChange}
             />
             <hr className='my-4 border-t border-gray-300/40' />
+            <CategorySelector
+              categories={[
+                'Глаголы 1',
+                'Глаголы 2',
+                'Глаголы 3',
+                'Все глаголы'
+              ]}
+              onCategoryChange={onCategoryChange}
+            />
+            <hr className='my-4 border-t border-gray-300/40' />
+
             <CategorySelector
               categories={['Семья и друзья', 'Профессии', 'Прочие о человеке']}
               onCategoryChange={onCategoryChange}
