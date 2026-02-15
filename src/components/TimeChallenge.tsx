@@ -137,7 +137,7 @@ export const TimeChallenge: React.FC<IProps> = ({
                   }}
                   maxLength={checkLength}
                   className={
-                    'mr-2 mb-2 inline w-28 px-0 py-1 text-center text-l font-semibold bg-white/20 border-2 border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/60 focus:bg-white/30 transition-all'
+                    'mr-2 mb-2 inline w-40 px-0 py-1 text-center text-l font-semibold bg-white/20 border-2 border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/60 focus:bg-white/30 transition-all'
                   }
                   placeholder={'.'.repeat(checkLength)}
                   autoFocus
