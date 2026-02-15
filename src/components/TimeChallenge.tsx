@@ -108,14 +108,16 @@ export const TimeChallenge: React.FC<IProps> = ({
             if (isChecking) {
               next()
             }
-            if (!isChecking && submitMode === 'button') {
+            if (!isChecking && submitMode === 'button' && input.length > 0) {
               submit(input)
             }
           }}
           className='mb-8'
         >
-          <div className='flex items-center justify-center gap-2 mb-6 h-12'>
-            <span className='text-l font-semibold text-white'>{word} </span>
+          <div className='mb-6 h-12 text-center'>
+            <span className='inline text-l font-semibold text-white mr-2 mb-2'>
+              {word}{' '}
+            </span>
             {!isChecking && (
               <>
                 <input
@@ -135,14 +137,14 @@ export const TimeChallenge: React.FC<IProps> = ({
                   }}
                   maxLength={checkLength}
                   className={
-                    'w-28 px-0 py-1 text-center text-l font-semibold bg-white/20 border-2 border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/60 focus:bg-white/30 transition-all'
+                    'mr-2 mb-2 inline w-28 px-0 py-1 text-center text-l font-semibold bg-white/20 border-2 border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/60 focus:bg-white/30 transition-all'
                   }
                   placeholder={'.'.repeat(checkLength)}
                   autoFocus
                 />
                 {submitMode === 'button' && (
                   <button
-                    className='px-3 py-2 text-xs bg-white/20 border-white/30 border-2 rounded-lg text-white hover:bg-white/20 transition-colors'
+                    className='mb-2 inline px-3 py-1 text-s bg-white/20 border-white/30 border-2 rounded-lg text-white hover:bg-white/20 transition-colors'
                     type='submit'
                   >
                     →
