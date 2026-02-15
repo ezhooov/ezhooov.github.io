@@ -2,6 +2,7 @@ import FlashcardApp from './pages/Flashcards.tsx'
 import { useCallback, useEffect, useState } from 'react'
 import Multiple from './pages/Multiple.tsx'
 import FirstPerson from './pages/FirstPerson.tsx'
+import Verbs from './pages/Verbs.tsx'
 
 function App() {
   const [page, setPage] = useState<string | null>(() => {
@@ -12,7 +13,8 @@ function App() {
     if (
       pageParam === 'flashcard' ||
       pageParam === 'multiple' ||
-      pageParam === 'firstPerson'
+      pageParam === 'firstPerson' ||
+      pageParam === 'verbs'
     ) {
       return pageParam
     }
@@ -30,6 +32,7 @@ function App() {
         pageParam === 'flashcard' ||
         pageParam === 'multiple' ||
         pageParam === 'firstPerson' ||
+        pageParam === 'verbs' ||
         pageParam === null
       ) {
         setPage(pageParam)
@@ -80,12 +83,19 @@ function App() {
               >
                 Личные окончания - 1 лицо
               </button>
+              <button
+                onClick={() => onPageChange('verbs')}
+                className={`col-span-2 px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
+              >
+                Глаголы
+              </button>
             </div>
           </div>
         )}
         {page === 'flashcard' && <FlashcardApp onBack={onBack} />}
         {page === 'multiple' && <Multiple onBack={onBack} />}
         {page === 'firstPerson' && <FirstPerson onBack={onBack} />}
+        {page === 'verbs' && <Verbs onBack={onBack} />}
       </div>
     </div>
   )

@@ -1,21 +1,29 @@
 import { useStopwatch } from 'react-timer-hook'
-import { useEffect, useEffectEvent, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { shuffleArray } from '../utils/shuffleArray.ts'
 
 interface IProps {
   words: readonly [string, string, string][]
   time: number
   onBack?: () => void
+  disableTimer?: boolean
+  submitMode?: 'length' | 'button'
 }
 
-export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
+export const TimeChallenge: React.FC<IProps> = ({
+  time,
+  words,
+  onBack,
+  disableTimer,
+  submitMode = 'length'
+}) => {
   const {
     totalMilliseconds,
     seconds,
     pause: pauseStopwatch,
     reset: resetStopwatch
   } = useStopwatch({
-    autoStart: true,
+    autoStart: !disableTimer,
     interval: 50
   })
 
@@ -36,14 +44,17 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
   const [fast, setFast] = useState(0)
   const [slow, setSlow] = useState(0)
 
-  const [isHiddenTimer, setIsHiddenTimer] = useState(false)
+  const [isHiddenTimer, setIsHiddenTimer] = useState(Boolean(disableTimer))
 
   const [isChecking, setIsChecking] = useState(false)
 
   const [translation, check, word] = dictionary[index]
+  const checkLength = check.length
 
-  const submit = useEffectEvent((input: string) => {
-    pauseStopwatch()
+  const submit = (input: string) => {
+    if (!disableTimer) {
+      pauseStopwatch()
+    }
 
     if (input.toLowerCase() === check.toLowerCase()) {
       if (seconds > time) {
@@ -55,20 +66,17 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
       setFailed((failed) => failed + 1)
     }
     setIsChecking(true)
-  })
+  }
 
   const next = () => {
     setInput('')
     setIndex((index) => index + 1)
     setIsChecking(false)
-    resetStopwatch()
-  }
 
-  useEffect(() => {
-    if (input.length === 3) {
-      submit(input)
+    if (!disableTimer) {
+      resetStopwatch()
     }
-  }, [input])
+  }
 
   useEffect(() => {
     if (dictionary.length - 1 === index) {
@@ -97,22 +105,50 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
           onSubmit={(e) => {
             e.preventDefault()
 
-            next()
+            if (isChecking) {
+              next()
+            }
+            if (!isChecking && submitMode === 'button') {
+              submit(input)
+            }
           }}
           className='mb-8'
         >
           <div className='flex items-center justify-center gap-2 mb-6 h-12'>
             <span className='text-l font-semibold text-white'>{word} </span>
             {!isChecking && (
-              <input
-                type='text'
-                value={input}
-                onChange={(e) => setInput(e.target.value.slice(0, 3))}
-                maxLength={3}
-                className='w-12 px-0 py-1 text-center text-l font-semibold bg-white/20 border-2 border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/60 focus:bg-white/30 transition-all'
-                placeholder='...'
-                autoFocus
-              />
+              <>
+                <input
+                  type='text'
+                  value={input}
+                  onChange={(e) => {
+                    const value = e.target.value.slice(0, checkLength)
+
+                    if (
+                      submitMode === 'length' &&
+                      value.length === checkLength
+                    ) {
+                      submit(value)
+                    }
+
+                    setInput(value)
+                  }}
+                  maxLength={checkLength}
+                  className={
+                    'w-28 px-0 py-1 text-center text-l font-semibold bg-white/20 border-2 border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/60 focus:bg-white/30 transition-all'
+                  }
+                  placeholder={'.'.repeat(checkLength)}
+                  autoFocus
+                />
+                {submitMode === 'button' && (
+                  <button
+                    className='px-3 py-2 text-xs bg-white/20 border-white/30 border-2 rounded-lg text-white hover:bg-white/20 transition-colors'
+                    type='submit'
+                  >
+                    →
+                  </button>
+                )}
+              </>
             )}
             {isChecking && input.toLowerCase() === check.toLowerCase() && (
               <span className='text-l font-semibold text-green-400'>
@@ -189,13 +225,15 @@ export const TimeChallenge: React.FC<IProps> = ({ time, words, onBack }) => {
           </div>
         </>
         <div>
-          <button
-            className='w-full px-3 py-2 text-xs bg-white/10 border border-white/30 rounded-md text-white hover:bg-white/20 transition-colors ml-2'
-            type='button'
-            onClick={() => setIsHiddenTimer((prev) => !prev)}
-          >
-            {isHiddenTimer ? 'Показать таймер' : 'Скрыть таймер'}
-          </button>
+          {!disableTimer && (
+            <button
+              className='w-full px-3 py-2 text-xs bg-white/10 border border-white/30 rounded-md text-white hover:bg-white/20 transition-colors'
+              type='button'
+              onClick={() => setIsHiddenTimer((prev) => !prev)}
+            >
+              {isHiddenTimer ? 'Показать таймер' : 'Скрыть таймер'}
+            </button>
+          )}
         </div>
       </div>
     </>
