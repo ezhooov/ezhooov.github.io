@@ -5,6 +5,28 @@ import { CategorySelector } from '../components/CategorySelector.tsx'
 import type { TMode } from '../types.ts'
 import { shuffleArray } from '../utils/shuffleArray.ts'
 
+const places = {
+  Станция: 'Бекет',
+  Район: 'Аудан',
+  Двор: 'Аула',
+  Дом: 'Үй',
+  Стол: 'Үстел',
+  Магазин: 'Дүкен',
+  Библиотека: 'Кітапхана',
+  Аптека: 'Дәріхана',
+  Базар: 'Базар',
+  Университет: 'Университет',
+  Парк: 'Саябақ',
+  'Степь, улица (вне помещения)': 'Дала',
+  Комната: 'Бөлме',
+  Озеро: 'Көл',
+  Море: 'Теңіз',
+  Площадь: 'Алаң',
+  Аул: 'Ауыл',
+  Дача: 'Саяжай',
+  Гора: 'Тау'
+} as const
+
 const verbs1 = {
   Приходить: 'Келу',
   Уходить: 'Кету',
@@ -138,7 +160,14 @@ const othersVocabulary = {
   Платье: 'Көйлек',
   Класс: 'Сынып',
   Дело: 'Іс',
-  Нога: 'Аяқ'
+  Нога: 'Аяқ',
+  Ковер: 'Кілем',
+  Окно: 'Терезе',
+  Дверь: 'Есік',
+  Стена: 'Қабырға',
+  Тетрадь: 'Дәптер',
+  Постель: 'Төсек',
+  Дорога: 'Жол'
 } as const
 
 const professionsVocabulary = {
@@ -240,7 +269,8 @@ const vocabulary = {
   ...professionsVocabulary,
   ...friendsFamilyVocabulary,
   ...questionsVocabulary,
-  ...verbs
+  ...verbs,
+  ...places
 } as const
 
 const vocabularyMap = {
@@ -259,7 +289,8 @@ const vocabularyMap = {
   'Глаголы 1': verbs1,
   'Глаголы 2': verbs2,
   'Глаголы 3': verbs3,
-  'Все глаголы': verbs
+  'Все глаголы': verbs,
+  Места: places
 } as const
 
 type Keys = keyof typeof vocabulary
@@ -403,6 +434,7 @@ export default function FlashcardApp({ onBack }: IProps) {
                 'Приветственные',
                 'Местоимения',
                 'Прилагательные',
+                'Места',
                 'Прочие'
               ]}
               onCategoryChange={onCategoryChange}
