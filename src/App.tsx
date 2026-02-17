@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Multiple from './pages/Multiple.tsx'
 import FirstPerson from './pages/FirstPerson.tsx'
 import Verbs from './pages/Verbs.tsx'
+import SpatialCases from './pages/SpatialCases.tsx'
 
 function App() {
   const [page, setPage] = useState<string | null>(() => {
@@ -14,7 +15,8 @@ function App() {
       pageParam === 'flashcard' ||
       pageParam === 'multiple' ||
       pageParam === 'firstPerson' ||
-      pageParam === 'verbs'
+      pageParam === 'verbs' ||
+      pageParam === 'spatialCases'
     ) {
       return pageParam
     }
@@ -33,6 +35,7 @@ function App() {
         pageParam === 'multiple' ||
         pageParam === 'firstPerson' ||
         pageParam === 'verbs' ||
+        pageParam === 'spatialCases' ||
         pageParam === null
       ) {
         setPage(pageParam)
@@ -85,9 +88,15 @@ function App() {
               </button>
               <button
                 onClick={() => onPageChange('verbs')}
-                className={`col-span-2 px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
+                className={`px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
               >
                 Глаголы
+              </button>
+              <button
+                onClick={() => onPageChange('spatialCases')}
+                className={`px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
+              >
+                Пространственные падежи
               </button>
             </div>
           </div>
@@ -96,6 +105,7 @@ function App() {
         {page === 'multiple' && <Multiple onBack={onBack} />}
         {page === 'firstPerson' && <FirstPerson onBack={onBack} />}
         {page === 'verbs' && <Verbs onBack={onBack} />}
+        {page === 'spatialCases' && <SpatialCases onBack={onBack} />}
       </div>
     </div>
   )

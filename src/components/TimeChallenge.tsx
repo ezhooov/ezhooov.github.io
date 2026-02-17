@@ -114,8 +114,8 @@ export const TimeChallenge: React.FC<IProps> = ({
           }}
           className='mb-8'
         >
-          <div className='mb-6 h-12 text-center'>
-            <span className='inline text-l font-semibold text-white mr-2 mb-2'>
+          <div className='mb-6 h-12 text-center flex flex-wrap justify-center items-center'>
+            <span className='inline text-l font-semibold text-white mr-2'>
               {word}{' '}
             </span>
             {!isChecking && (
@@ -157,16 +157,36 @@ export const TimeChallenge: React.FC<IProps> = ({
                 {check}
               </span>
             )}
-            {isChecking && input.toLowerCase() !== check.toLowerCase() && (
-              <>
-                <span className='text-l font-semibold text-red-400 line-through'>
-                  {input}
-                </span>{' '}
-                <span className='text-l font-semibold text-green-400'>
-                  {check}
-                </span>
-              </>
-            )}
+            {isChecking &&
+              input.toLowerCase() !== check.toLowerCase() &&
+              (() => {
+                // Проверяем, есть ли совпадение в начале
+                let matchLength = 0
+                const minLength = Math.min(input.length, check.length)
+                for (let i = 0; i < minLength; i++) {
+                  if (check[i].toLowerCase() === input[i].toLowerCase()) {
+                    matchLength++
+                  } else {
+                    break
+                  }
+                }
+
+                return (
+                  <>
+                    <span className='text-l font-semibold text-green-400 mr-2'>
+                      {input.slice(0, matchLength)}
+                    </span>{' '}
+                    <div className='inline-flex flex-col'>
+                      <span className='text-l font-semibold text-green-400'>
+                        {check.slice(matchLength)}
+                      </span>
+                      <span className='text-l font-semibold text-red-400 line-through'>
+                        {input.slice(matchLength) || '-'}
+                      </span>
+                    </div>
+                  </>
+                )
+              })()}
             {isChecking && (
               <button
                 className='px-3 py-2 text-xs bg-white/10 border border-white/30 rounded-md text-white hover:bg-white/20 transition-colors ml-2'
