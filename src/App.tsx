@@ -88,13 +88,13 @@ function App() {
               </button>
               <button
                 onClick={() => onPageChange('verbs')}
-                className={`px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
+                className={`col-span-2 px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
               >
                 Глаголы
               </button>
               <button
                 onClick={() => onPageChange('spatialCases')}
-                className={`px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
+                className={`col-span-2 px-3 py-2 rounded-lg text-center transition-colors cursor-pointer hover:bg-white/10 text-white/60 hover:text-white`}
               >
                 Пространственные падежи
               </button>
